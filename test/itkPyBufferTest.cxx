@@ -43,8 +43,8 @@ int itkPyBufferTest(int, char * [])
     scalarImage->SetRegions(region);
     scalarImage->Allocate();
 
-    PyObject* scalarPyBuffer = itk::PyBuffer<ScalarImageType>::GetArrayFromImage(scalarImage);
-    itk::PyBuffer<ScalarImageType>::GetImageFromArray(scalarPyBuffer);
+    PyObject* scalarPyBuffer = itk::PyBuffer<ScalarImageType>::_GetArrayFromImage(scalarImage);
+    //itk::PyBuffer<ScalarImageType>::_GetImageFromArray(scalarPyBuffer);
 
 
     // Test for vector image
@@ -53,7 +53,7 @@ int itkPyBufferTest(int, char * [])
     vectorImage->SetNumberOfComponentsPerPixel(3);
     vectorImage->Allocate();
 
-    PyObject* vectorPyBuffer = itk::PyBuffer<VectorImageType>::GetArrayFromImage(vectorImage);
+    PyObject* vectorPyBuffer = itk::PyBuffer<VectorImageType>::_GetArrayFromImage(vectorImage);
     // TODO: More work needs to be done in the conversion from ImageToArray
     (void) vectorPyBuffer;
     //itk::PyBuffer<VectorImageType>::GetImageFromArray(vectorPyBuffer);

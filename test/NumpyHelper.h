@@ -16,7 +16,7 @@
  *
  *=========================================================================*/
 #include <Python.h>
-#include <numpy/arrayobject.h>
+//#include <numpy/arrayobject.h>
 
 class NumpyHelper
 {
@@ -33,7 +33,7 @@ protected:
   NumpyHelper()
   {
     Py_Initialize();
-    import_array();
+    //import_array();
   }
 
   ~NumpyHelper()

@@ -26,7 +26,7 @@ namespace itk
 template<class TImage>
 PyObject *
 PyBuffer<TImage>
-::_GetArrayFromImage( ImageType * image, bool keepAxes )
+::_GetArrayFromImage( ImageType * image)
 {
   PyObject *                  memoryView    = NULL;
   Py_buffer                   pyBuffer;

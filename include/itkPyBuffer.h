@@ -68,7 +68,7 @@ public:
   /**
    * Get an Array with the content of the image buffer
    */
-  static PyObject * _GetArrayFromImage( ImageType * image, bool keepAxes = false);
+  static PyObject * _GetArrayFromImage( ImageType * image);
 
   /**
    * Get an ITK image from a Python array

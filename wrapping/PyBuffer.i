@@ -18,10 +18,17 @@ class itkndarray(numpy.ndarray):
 
     def __setitem__(self, item, to):
         if self.bConverted == True:
-            temp = numpy.array(self, copy = True)
-            self.data = temp.data
+            temp            = numpy.array(self, copy = True)
+            self.data       = temp.data
             self.bConverted = False
         super(itkndarray, self).__setitem__(item, to)
+
+    def itemset(self, *args):
+        if self.bConverted == True:
+            temp            = numpy.array(self, copy = True)
+            self.data       = temp.data
+            self.bConverted = False
+        super(itkndarray, self).itemset(*args)
 
 %}
 
@@ -43,8 +50,11 @@ class itkndarray(numpy.ndarray):
         if(image.GetNumberOfComponentsPerPixel() > 1):
             shape = [image.GetNumberOfComponentsPerPixel(), ] + shape
 
+        if keepAxes == False:
+            shape = shape[::-1]
+
         memview      = itkPyBufferIF2._GetArrayFromImage(image, keepAxes)
-        itkndarrview = numpy.asarray(memview).view(dtype = numpy.float32).reshape(shape[::-1]).view(itkndarray)
+        itkndarrview = numpy.asarray(memview).view(dtype = numpy.float32).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
         return itkndarrview
@@ -92,8 +102,11 @@ class itkndarray(numpy.ndarray):
         if(image.GetNumberOfComponentsPerPixel() > 1):
             shape = [image.GetNumberOfComponentsPerPixel(), ] + shape
 
+        if keepAxes == False:
+            shape = shape[::-1]
+
         memview      = itkPyBufferIF3._GetArrayFromImage(image, keepAxes)
-        itkndarrview = numpy.asarray(memview).view(dtype = numpy.float32).reshape(shape[::-1]).view(itkndarray)
+        itkndarrview = numpy.asarray(memview).view(dtype = numpy.float32).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
         return itkndarrview
@@ -139,8 +152,11 @@ class itkndarray(numpy.ndarray):
         if(image.GetNumberOfComponentsPerPixel() > 1):
             shape = [image.GetNumberOfComponentsPerPixel(), ] + shape
 
+        if keepAxes == False:
+            shape = shape[::-1]
+
         memview      = itkPyBufferISS2._GetArrayFromImage(image, keepAxes)
-        itkndarrview = numpy.asarray(memview).view(dtype = numpy.int16).reshape(shape[::-1]).view(itkndarray)
+        itkndarrview = numpy.asarray(memview).view(dtype = numpy.int16).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
         return itkndarrview
@@ -186,8 +202,11 @@ class itkndarray(numpy.ndarray):
         if(image.GetNumberOfComponentsPerPixel() > 1):
             shape = [image.GetNumberOfComponentsPerPixel(), ] + shape
 
+        if keepAxes == False:
+            shape = shape[::-1]
+
         memview      = itkPyBufferISS3._GetArrayFromImage(image, keepAxes)
-        itkndarrview = numpy.asarray(memview).view(dtype = numpy.int16).reshape(shape[::-1]).view(itkndarray)
+        itkndarrview = numpy.asarray(memview).view(dtype = numpy.int16).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
         return itkndarrview
@@ -233,8 +252,11 @@ class itkndarray(numpy.ndarray):
         if(image.GetNumberOfComponentsPerPixel() > 1):
             shape = [image.GetNumberOfComponentsPerPixel(), ] + shape
 
+        if keepAxes == False:
+            shape = shape[::-1]
+
         memview      = itkPyBufferIUC2._GetArrayFromImage(image, keepAxes)
-        itkndarrview = numpy.asarray(memview).view(dtype = numpy.uint8).reshape(shape[::-1]).view(itkndarray)
+        itkndarrview = numpy.asarray(memview).view(dtype = numpy.uint8).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
         return itkndarrview
@@ -280,8 +302,11 @@ class itkndarray(numpy.ndarray):
         if(image.GetNumberOfComponentsPerPixel() > 1):
             shape = [image.GetNumberOfComponentsPerPixel(), ] + shape
 
+        if keepAxes == False:
+            shape = shape[::-1]
+
         memview      = itkPyBufferIUC3._GetArrayFromImage(image, keepAxes)
-        itkndarrview = numpy.asarray(memview).view(dtype = numpy.uint8).reshape(shape[::-1]).view(itkndarray)
+        itkndarrview = numpy.asarray(memview).view(dtype = numpy.uint8).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
         return itkndarrview
@@ -327,8 +352,11 @@ class itkndarray(numpy.ndarray):
         if(image.GetNumberOfComponentsPerPixel() > 1):
             shape = [image.GetNumberOfComponentsPerPixel(), ] + shape
 
+        if keepAxes == False:
+            shape = shape[::-1]
+
         memview      = itkPyBufferVIF2._GetArrayFromImage(image, keepAxes)
-        itkndarrview = numpy.asarray(memview).view(dtype = numpy.float32).reshape(shape[::-1]).view(itkndarray)
+        itkndarrview = numpy.asarray(memview).view(dtype = numpy.float32).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
         return itkndarrview
@@ -374,8 +402,11 @@ class itkndarray(numpy.ndarray):
         if(image.GetNumberOfComponentsPerPixel() > 1):
             shape = [image.GetNumberOfComponentsPerPixel(), ] + shape
 
+        if keepAxes == False:
+            shape = shape[::-1]
+
         memview      = itkPyBufferVIF3._GetArrayFromImage(image, keepAxes)
-        itkndarrview = numpy.asarray(memview).view(dtype = numpy.float32).reshape(shape[::-1]).view(itkndarray)
+        itkndarrview = numpy.asarray(memview).view(dtype = numpy.float32).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
         return itkndarrview
@@ -421,8 +452,11 @@ class itkndarray(numpy.ndarray):
         if(image.GetNumberOfComponentsPerPixel() > 1):
             shape = [image.GetNumberOfComponentsPerPixel(), ] + shape
 
+        if keepAxes == False:
+            shape = shape[::-1]
+
         memview      = itkPyBufferVISS2._GetArrayFromImage(image, keepAxes)
-        itkndarrview = numpy.asarray(memview).view(dtype = numpy.int16).reshape(shape[::-1]).view(itkndarray)
+        itkndarrview = numpy.asarray(memview).view(dtype = numpy.int16).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
         return itkndarrview
@@ -469,8 +503,11 @@ class itkndarray(numpy.ndarray):
         if(image.GetNumberOfComponentsPerPixel() > 1):
             shape = [image.GetNumberOfComponentsPerPixel(), ] + shape
 
+        if keepAxes == False:
+            shape = shape[::-1]
+
         memview      = itkPyBufferVISS3._GetArrayFromImage(image, keepAxes)
-        itkndarrview = numpy.asarray(memview).view(dtype = numpy.int16).reshape(shape[::-1]).view(itkndarray)
+        itkndarrview = numpy.asarray(memview).view(dtype = numpy.int16).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
         return itkndarrview
@@ -516,8 +553,11 @@ class itkndarray(numpy.ndarray):
         if(image.GetNumberOfComponentsPerPixel() > 1):
             shape = [image.GetNumberOfComponentsPerPixel(), ] + shape
 
+        if keepAxes == False:
+            shape = shape[::-1]
+
         memview      = itkPyBufferVIUC2._GetArrayFromImage(image, keepAxes)
-        itkndarrview = numpy.asarray(memview).view(dtype = numpy.uint8).reshape(shape[::-1]).view(itkndarray)
+        itkndarrview = numpy.asarray(memview).view(dtype = numpy.uint8).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
         return itkndarrview
@@ -563,8 +603,11 @@ class itkndarray(numpy.ndarray):
         if(image.GetNumberOfComponentsPerPixel() > 1):
             shape = [image.GetNumberOfComponentsPerPixel(), ] + shape
 
+        if keepAxes == False:
+            shape = shape[::-1]
+
         memview      = itkPyBufferVIUC3._GetArrayFromImage(image, keepAxes)
-        itkndarrview = numpy.asarray(memview).view(dtype = numpy.uint8).reshape(shape[::-1]).view(itkndarray)
+        itkndarrview = numpy.asarray(memview).view(dtype = numpy.uint8).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
         return itkndarrview

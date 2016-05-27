@@ -53,7 +53,7 @@ class itkndarray(numpy.ndarray):
         if keepAxes == False:
             shape = shape[::-1]
 
-        memview      = itkPyBufferIF2._GetArrayFromImage(image, keepAxes)
+        memview      = itkPyBufferIF2._GetArrayFromImage(image)
         itkndarrview = numpy.asarray(memview).view(dtype = numpy.float32).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
@@ -105,7 +105,7 @@ class itkndarray(numpy.ndarray):
         if keepAxes == False:
             shape = shape[::-1]
 
-        memview      = itkPyBufferIF3._GetArrayFromImage(image, keepAxes)
+        memview      = itkPyBufferIF3._GetArrayFromImage(image)
         itkndarrview = numpy.asarray(memview).view(dtype = numpy.float32).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
@@ -155,7 +155,7 @@ class itkndarray(numpy.ndarray):
         if keepAxes == False:
             shape = shape[::-1]
 
-        memview      = itkPyBufferISS2._GetArrayFromImage(image, keepAxes)
+        memview      = itkPyBufferISS2._GetArrayFromImage(image)
         itkndarrview = numpy.asarray(memview).view(dtype = numpy.int16).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
@@ -205,7 +205,7 @@ class itkndarray(numpy.ndarray):
         if keepAxes == False:
             shape = shape[::-1]
 
-        memview      = itkPyBufferISS3._GetArrayFromImage(image, keepAxes)
+        memview      = itkPyBufferISS3._GetArrayFromImage(image)
         itkndarrview = numpy.asarray(memview).view(dtype = numpy.int16).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
@@ -255,7 +255,7 @@ class itkndarray(numpy.ndarray):
         if keepAxes == False:
             shape = shape[::-1]
 
-        memview      = itkPyBufferIUC2._GetArrayFromImage(image, keepAxes)
+        memview      = itkPyBufferIUC2._GetArrayFromImage(image)
         itkndarrview = numpy.asarray(memview).view(dtype = numpy.uint8).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
@@ -305,7 +305,7 @@ class itkndarray(numpy.ndarray):
         if keepAxes == False:
             shape = shape[::-1]
 
-        memview      = itkPyBufferIUC3._GetArrayFromImage(image, keepAxes)
+        memview      = itkPyBufferIUC3._GetArrayFromImage(image)
         itkndarrview = numpy.asarray(memview).view(dtype = numpy.uint8).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
@@ -355,7 +355,7 @@ class itkndarray(numpy.ndarray):
         if keepAxes == False:
             shape = shape[::-1]
 
-        memview      = itkPyBufferVIF2._GetArrayFromImage(image, keepAxes)
+        memview      = itkPyBufferVIF2._GetArrayFromImage(image)
         itkndarrview = numpy.asarray(memview).view(dtype = numpy.float32).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
@@ -405,7 +405,7 @@ class itkndarray(numpy.ndarray):
         if keepAxes == False:
             shape = shape[::-1]
 
-        memview      = itkPyBufferVIF3._GetArrayFromImage(image, keepAxes)
+        memview      = itkPyBufferVIF3._GetArrayFromImage(image)
         itkndarrview = numpy.asarray(memview).view(dtype = numpy.float32).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
@@ -455,7 +455,7 @@ class itkndarray(numpy.ndarray):
         if keepAxes == False:
             shape = shape[::-1]
 
-        memview      = itkPyBufferVISS2._GetArrayFromImage(image, keepAxes)
+        memview      = itkPyBufferVISS2._GetArrayFromImage(image)
         itkndarrview = numpy.asarray(memview).view(dtype = numpy.int16).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
@@ -506,7 +506,7 @@ class itkndarray(numpy.ndarray):
         if keepAxes == False:
             shape = shape[::-1]
 
-        memview      = itkPyBufferVISS3._GetArrayFromImage(image, keepAxes)
+        memview      = itkPyBufferVISS3._GetArrayFromImage(image)
         itkndarrview = numpy.asarray(memview).view(dtype = numpy.int16).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
@@ -556,7 +556,7 @@ class itkndarray(numpy.ndarray):
         if keepAxes == False:
             shape = shape[::-1]
 
-        memview      = itkPyBufferVIUC2._GetArrayFromImage(image, keepAxes)
+        memview      = itkPyBufferVIUC2._GetArrayFromImage(image)
         itkndarrview = numpy.asarray(memview).view(dtype = numpy.uint8).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 
@@ -606,7 +606,7 @@ class itkndarray(numpy.ndarray):
         if keepAxes == False:
             shape = shape[::-1]
 
-        memview      = itkPyBufferVIUC3._GetArrayFromImage(image, keepAxes)
+        memview      = itkPyBufferVIUC3._GetArrayFromImage(image)
         itkndarrview = numpy.asarray(memview).view(dtype = numpy.uint8).reshape(shape).view(itkndarray)
         itkndarrview.SetConvertedFlag(converted = True)
 

@@ -60,13 +60,6 @@ PyBuffer<TImage>
   len *= numberOfComponents;
   len *= pixelSize;
 
-
-  std::cout << "ImageDimension      ::" << ImageDimension << std::endl;
-  std::cout << "numberOfComponents  ::" << numberOfComponents << std::endl;
-  std::cout << "The length of Buffer::" << len << std::endl;
-
-  /////////////////////////////////////////////  
-
   res = PyBuffer_FillInfo(&pyBuffer, NULL, (void*)itkImageBuffer, len, 0, PyBUF_CONTIG);
   memoryView = PyMemoryView_FromBuffer(&pyBuffer);
 

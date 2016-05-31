@@ -52,13 +52,12 @@ PyBuffer<TImage>
   SizeType size = image->GetBufferedRegion().GetSize();
 
   for( unsigned int dim = 0; dim < ImageDimension; ++dim )
-    {
-    std::cout << "size["<<dim <<"]::" << size[dim] << std::endl;  
+    {  
     len *= size[dim];
     }
 
   len *= numberOfComponents;
-  len *= pixelSize;
+  len *= pixelSize; 
 
   res = PyBuffer_FillInfo(&pyBuffer, NULL, (void*)itkImageBuffer, len, 0, PyBUF_CONTIG);
   memoryView = PyMemoryView_FromBuffer(&pyBuffer);

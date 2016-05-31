@@ -1,11 +1,40 @@
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/PyBuffer.i.init"
+               "${CMAKE_CURRENT_BINARY_DIR}/PyBuffer.i"
+               @ONLY)
+
 itk_wrap_class("itk::PyBuffer")
   UNIQUE(types "${WRAP_ITK_SCALAR};UC")
-  itk_wrap_image_filter("${types}" 1)
+  foreach(d ${ITK_WRAP_DIMS})
+    foreach(t ${types})
+      itk_wrap_template("${ITKM_I${t}${d}}" "${ITKT_I${t}${d}}")
+      set(PyBufferTypes ${ITKM_I${t}${d}})
+      set(PixelType ${t})
+      configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/PyBuffer.i.in
+                      ${CMAKE_CURRENT_BINARY_DIR}/PyBuffer.i.temp
+                      @ONLY)
+      message("---" ${t})
+      message("---" ${ITKT_I${t}${d}})
+      file(READ ${CMAKE_CURRENT_BINARY_DIR}/PyBuffer.i.temp 
+           PyBufferInterfaceTemp)
+      file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/PyBuffer.i
+           ${PyBufferInterfaceTemp})     
+    endforeach(t)
+  endforeach(d)
 
   # VectorImage types
   foreach(d ${ITK_WRAP_DIMS})
     foreach(t ${WRAP_ITK_SCALAR})
       itk_wrap_template("${ITKM_VI${t}${d}}" "${ITKT_VI${t}${d}}")
+      set(PyBufferTypes ${ITKM_VI${t}${d}})
+      set(PixelType ${t})
+      configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/PyBuffer.i.in
+                      ${CMAKE_CURRENT_BINARY_DIR}/PyBuffer.i.temp
+                      @ONLY)
+      file(READ ${CMAKE_CURRENT_BINARY_DIR}/PyBuffer.i.temp 
+           PyBufferInterfaceTemp)
+      file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/PyBuffer.i
+           ${PyBufferInterfaceTemp}) 
     endforeach(t)
   endforeach(d)
 itk_end_wrap_class()
+

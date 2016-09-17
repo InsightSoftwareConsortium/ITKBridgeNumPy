@@ -28,10 +28,6 @@
 // The python header defines _POSIX_C_SOURCE without a preceding #undef
 #undef _POSIX_C_SOURCE
 #include <Python.h>
-// This should eventually be replaced with something that uses the buffer-api
-// like the implementation in SimpleITK
-#include <numpy/arrayobject.h>
-
 
 namespace itk
 {
@@ -72,12 +68,12 @@ public:
   /**
    * Get an Array with the content of the image buffer
    */
-  static PyObject * GetArrayFromImage( ImageType * image, bool keepAxes = false);
+  static PyObject * _GetArrayFromImage( ImageType * image);
 
   /**
    * Get an ITK image from a Python array
    */
-  static const OutputImagePointer GetImageFromArray( PyObject *obj );
+  static const OutputImagePointer _GetImageFromArray( PyObject *arr, PyObject *shape, PyObject *numOfComponent);
 
 protected:
 
@@ -85,31 +81,6 @@ private:
   PyBuffer(const Self&);       // Purposely not implemented.
   void operator=(const Self&); // Purposely not implemented.
 };
-
-// This declaration is void of a definition, so that unsupported types
-// will generate a compile time error.
-template <class T> struct PyTypeTraits;
-
-template<> struct PyTypeTraits<double> { enum { value = NPY_DOUBLE }; };
-template<> struct PyTypeTraits<float> { enum { value = NPY_FLOAT }; };
-
-template<> struct PyTypeTraits<std::complex<float> > { enum { value = NPY_COMPLEX64 }; };
-template<> struct PyTypeTraits<std::complex<double> > { enum { value = NPY_COMPLEX128 }; };
-
-template<> struct PyTypeTraits<long long>{ enum { value = NPY_LONGLONG }; };
-template<> struct PyTypeTraits<unsigned long long>{ enum { value = NPY_ULONGLONG }; };
-
-template<> struct PyTypeTraits<long>{ enum { value = NPY_LONG }; };
-template<> struct PyTypeTraits<unsigned long>{ enum { value = NPY_ULONG }; };
-
-template<> struct PyTypeTraits<int>{ enum { value = NPY_INT }; };
-template<> struct PyTypeTraits<unsigned int>{ enum { value = NPY_UINT }; };
-
-template<> struct PyTypeTraits<short>{ enum { value = NPY_SHORT }; };
-template<> struct PyTypeTraits<unsigned short>{ enum { value = NPY_USHORT }; };
-
-template<> struct PyTypeTraits<signed char>{ enum { value = NPY_BYTE }; };
-template<> struct PyTypeTraits<unsigned char>{ enum { value = NPY_UBYTE }; };
 
 } // namespace itk
 

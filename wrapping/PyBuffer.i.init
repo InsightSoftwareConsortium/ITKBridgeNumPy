@@ -1,0 +1,55 @@
+%pythoncode %{
+
+HAVE_NUMPY = True
+try:
+  import numpy
+except ImportError:
+  HAVE_NUMPY = False
+
+def _get_numpy_pixelid(itk_Image_type):
+    """Returns a ITK PixelID given a numpy array."""
+
+    if not HAVE_NUMPY:
+        raise ImportError('Numpy not available.')
+    # This is a Mapping from numpy array types to itk pixel types.
+    _np_itk = {"UC":numpy.uint8,
+               "US":numpy.uint16,
+               "UI":numpy.uint32,
+               "UL":numpy.uint64,
+               "SC":numpy.int8,
+               "SS":numpy.int16,
+               "SI":numpy.int32,
+               "SL":numpy.int64,
+               "F":numpy.float32,
+               "D":numpy.float64,
+                }
+    try:
+        return _np_itk[itk_Image_type]
+    except KeyError as e:
+        raise e
+
+
+class itkndarray(numpy.ndarray):
+    """ A customized NumPy.ndarray for ITK Image."""
+
+    bConverted = False
+
+    def SetConvertedFlag(self, converted = True):
+        self.bConverted = converted
+
+    def __setitem__(self, item, to):
+        if self.bConverted == True:
+            temp            = numpy.array(self, copy = True)
+            self.data       = temp.data
+            self.bConverted = False
+        super(itkndarray, self).__setitem__(item, to)
+
+    def itemset(self, *args):
+        if self.bConverted == True:
+            temp            = numpy.array(self, copy = True)
+            self.data       = temp.data
+            self.bConverted = False
+        super(itkndarray, self).itemset(*args)
+
+%}
+

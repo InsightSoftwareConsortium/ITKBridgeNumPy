@@ -20,27 +20,22 @@
 
 #include "itkPyBuffer.h"
 
-// Support NumPy < 1.7
-#ifndef NPY_ARRAY_C_CONTIGUOUS
-#define NPY_ARRAY_C_CONTIGUOUS NPY_C_CONTIGUOUS
-#endif
-
-#ifndef NPY_ARRAY_F_CONTIGUOUS
-#define NPY_ARRAY_F_CONTIGUOUS NPY_F_CONTIGUOUS
-#endif
-
-#ifndef NPY_ARRAY_WRITEABLE
-#define NPY_ARRAY_WRITEABLE NPY_WRITEABLE
-#endif
-
 namespace itk
 {
 
 template<class TImage>
 PyObject *
 PyBuffer<TImage>
-::GetArrayFromImage( ImageType * image, bool keepAxes )
+::_GetArrayFromImage( ImageType * image)
 {
+  PyObject *                  memoryView    = NULL;
+  Py_buffer                   pyBuffer;
+  memset(&pyBuffer, 0, sizeof(Py_buffer));
+
+  Py_ssize_t                  len           = 1;
+  size_t                      pixelSize     = sizeof(ComponentType);
+  int                         res           = 0;
+
   if( !image )
     {
     throw std::runtime_error("Input image is null");
@@ -49,83 +44,83 @@ PyBuffer<TImage>
   image->Update();
 
   ComponentType *buffer =  const_cast < ComponentType *> (reinterpret_cast< const ComponentType* > ( image->GetBufferPointer() ) );
-  char * data = (char *)( buffer );
 
+  void * itkImageBuffer = (void *)( buffer );
+
+  // Computing the length of data
   const int numberOfComponents = image->GetNumberOfComponentsPerPixel();
-
-  const int itemType = PyTypeTraits<ComponentType>::value;
-
-  const int numpyArrayDimension = ( numberOfComponents > 1) ? ImageDimension + 1 : ImageDimension;
-
-  // Construct array with dimensions
-  npy_intp *dimensions = new npy_intp[numpyArrayDimension];
-
-  // Add a dimension if there are more than one component
-  if ( numberOfComponents > 1)
-    {
-    dimensions[0] = numberOfComponents;
-    }
-  const int dimensionOffset = ( numberOfComponents > 1) ? 1 : 0;
-
   SizeType size = image->GetBufferedRegion().GetSize();
+
   for( unsigned int dim = 0; dim < ImageDimension; ++dim )
-    {
-    dimensions[dim + dimensionOffset] = size[dim];
+    {  
+    len *= size[dim];
     }
 
-  if( !keepAxes )
-    {
-    // Reverse dimensions array
-    npy_intp *reverseDimensions = new npy_intp[ numpyArrayDimension ];
-    for( int dim = 0; dim < numpyArrayDimension; ++dim )
-      {
-      reverseDimensions[dim] = dimensions[numpyArrayDimension - dim - 1];
-      }
+  len *= numberOfComponents;
+  len *= pixelSize; 
 
-    for( int dim = 0; dim < numpyArrayDimension; ++dim )
-      {
-      dimensions[dim] = reverseDimensions[dim];
-      }
+  res = PyBuffer_FillInfo(&pyBuffer, NULL, (void*)itkImageBuffer, len, 0, PyBUF_CONTIG);
+  memoryView = PyMemoryView_FromBuffer(&pyBuffer);
 
-    delete[] reverseDimensions;
-    }
-
-  const int flags = (keepAxes? NPY_ARRAY_F_CONTIGUOUS : NPY_ARRAY_C_CONTIGUOUS) |
-              NPY_WRITEABLE;
-
-  PyObject * obj = PyArray_New(&PyArray_Type, numpyArrayDimension, dimensions, itemType, NULL, data, 0, flags, NULL);
-
-  delete[] dimensions;
-
-  return obj;
+  PyBuffer_Release(&pyBuffer);
+  
+  return memoryView;
 }
 
 template<class TImage>
 const typename PyBuffer<TImage>::OutputImagePointer
 PyBuffer<TImage>
-::GetImageFromArray( PyObject *obj )
+::_GetImageFromArray( PyObject *arr, PyObject *shape, PyObject *numOfComponent)
 {
-  const int elementType = PyTypeTraits<ComponentType>::value;
+  PyObject *                  obj           = NULL;
+  PyObject *                  shapeseq      = NULL;
+  PyObject *                  item          = NULL;
 
-  PyArrayObject * array = (PyArrayObject *) PyArray_ContiguousFromObject( obj,
-                                                                          elementType,
-                                                                          ImageDimension,
-                                                                          ImageDimension  );
-
-  if( array == NULL )
-    {
-    throw std::runtime_error("Contiguous array couldn't be created from input python object");
-    }
-
-  const unsigned int imageDimension = array->nd;
+  Py_ssize_t                  buffer_len;
+  Py_buffer                   pyBuffer;
+  memset(&pyBuffer, 0, sizeof(Py_buffer));
 
   SizeType size;
-
   SizeValueType numberOfPixels = 1;
-  for( unsigned int dim = 0; dim < imageDimension; ++dim )
+
+  const void *                buffer;
+
+  int                         NumOfComponent= 1;
+  unsigned int                dimension     = 0;
+
+
+  size_t                      pixelSize     = sizeof(ComponentType);
+  size_t                      len           = 1;
+
+  if(PyObject_GetBuffer(arr, &pyBuffer, PyBUF_CONTIG) == -1)
     {
-    size[imageDimension - dim - 1] = array->dimensions[dim];
-    numberOfPixels *= array->dimensions[dim];
+    PyErr_SetString( PyExc_RuntimeError, "Cannot get an instance of NumPy array." );  
+    PyErr_Clear();
+    return NULL;
+    }
+  else
+    {
+    buffer_len = pyBuffer.len;
+    buffer     = pyBuffer.buf;
+    }
+
+  obj        = shape;
+  shapeseq   = PySequence_Fast(obj, "expected sequence");
+  dimension  = PySequence_Size(obj);
+
+  NumOfComponent=(int)PyInt_AsLong(numOfComponent);
+
+  for(unsigned int i=0 ; i< dimension; ++i)
+    {
+    item = PySequence_Fast_GET_ITEM(shapeseq,i);
+    size[i] = (SizeValueType)PyInt_AsLong(item);
+    numberOfPixels *= size[i];
+    }
+
+  len = numberOfPixels*NumOfComponent*pixelSize;
+  if ( buffer_len != len )
+    {
+    PyErr_SetString( PyExc_RuntimeError, "Size mismatch of image and Buffer." );
     }
 
   IndexType start;
@@ -148,7 +143,7 @@ PyBuffer<TImage>
   importer->SetSpacing( spacing );
   const bool importImageFilterWillOwnTheBuffer = false;
 
-  ComponentType * data = (ComponentType *)array->data;
+  ComponentType * data = (ComponentType *)buffer;
 
   importer->SetImportPointer( data,
                               numberOfPixels,
@@ -157,7 +152,7 @@ PyBuffer<TImage>
   importer->Update();
   OutputImagePointer output = importer->GetOutput();
   output->DisconnectPipeline();
-
+  
   return output;
 }
 

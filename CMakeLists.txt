@@ -4,7 +4,7 @@ if(NOT ITK_SOURCE_DIR)
   include(itk-module-init.cmake)
 endif()
 
-set(BridgeNumPy_SYSTEM_INCLUDE_DIRS "${NUMPY_INCLUDE_DIR};${PYTHON_INCLUDE_DIR}")
+set(BridgeNumPy_SYSTEM_INCLUDE_DIRS "${PYTHON_INCLUDE_DIR}")
 
 if(NOT ITK_SOURCE_DIR)
   find_package(ITK REQUIRED)

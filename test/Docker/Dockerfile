@@ -7,7 +7,6 @@ RUN apt-get update && apt-get install -y curl && \
 RUN apt-get update && apt-get install -y \
   build-essential \
   curl \
-  cmake \
   git \
   libexpat1-dev \
   libhdf5-dev \
@@ -23,11 +22,15 @@ RUN apt-get update && apt-get install -y \
   vim \
   zlib1g-dev
 
+ENV GET_PIP_URL=https://bootstrap.pypa.io/get-pip.py
+RUN curl $GET_PIP_URL > /tmp/get-pip.py
+RUN python /tmp/get-pip.py && python -m pip install cmake
+
 RUN mkdir -p /usr/src/ITKBridgeNumPy-build
 WORKDIR /usr/src
 
-# master 2016-09-20
-ENV ITK_GIT_TAG bc0c835d50707cbf3b808f98d8e22295ef50c242
+# 2018-02-12
+ENV ITK_GIT_TAG 801dab44fe6cf3a25acb80616add7cd2c799962a
 RUN git clone https://itk.org/ITK.git && \
   cd ITK && \
   git checkout ${ITK_GIT_TAG} && \

@@ -1,3 +1,8 @@
+Deprecated
+==========
+
+This repository has been `integrated into directly into ITK <https://github.com/InsightSoftwareConsortium/ITK/commit/c035bf83f36ec786a648098ed9c7d91c560b3ae1>`_ . This repository is now deprecated.
+
 ITKBridgeNumPy
 ==============
 
